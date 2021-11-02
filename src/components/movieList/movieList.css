@@ -1,0 +1,14 @@
+.movie__card-wrapper {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    background-color: #FFFFFF;
+    width: 960px;
+    margin: 0 auto;
+}
+
+ /* @media (max-width: 420px) {
+    .movie__card-wrapper {
+       flex-direction: column; 
+    }
+  }  */

@@ -22,7 +22,7 @@ const MovieList = ({ movie, loading, error }) => {
     return <Spiner />;
   }
 
-  if (error) {
+  if (error === true) {
     return <Alert />;
   }
 

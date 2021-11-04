@@ -18,11 +18,11 @@ const MovieList = ({ movie, loading, error }) => {
     />
   ));
 
-  if (loading && !error) {
+  if (!loading && !error) {
     return <Spiner />;
   }
 
-  if (error === true) {
+  if (error) {
     return <Alert />;
   }
 

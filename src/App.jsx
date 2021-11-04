@@ -10,7 +10,7 @@ export default class App extends Component {
 
   state = {
     movie: [],
-    loading: true,
+    loading: false,
     error: false,
   };
 
@@ -29,7 +29,7 @@ export default class App extends Component {
   onError = () => {
     this.setState({
       error: true,
-      loading: true,
+      loading: false,
     });
   };
 
@@ -39,7 +39,7 @@ export default class App extends Component {
       .then((film) => {
         this.setState({
           movie: [...film],
-          loading: false,
+          loading: true,
         });
       })
       .catch(this.onError);

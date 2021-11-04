@@ -1,21 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import Movie from '../movie/movie';
-
 import './movieList.css';
+import Spiner from '../spiner/Spiner';
+import Alert from '../Alert/Alert';
 
-function MovieList({ movie }) {
-  MovieList.defaultProps = {
-    movie: {},
-  };
-
-  MovieList.propTypes = {
-    movie: PropTypes.arrayOf(PropTypes.object),
-  };
-
+const MovieList = ({ movie, loading, error }) => {
   const element = movie.map((item) => (
-    // console.log(item.backdrop_path)
     <Movie
       key={item.id}
       img={item.backdrop_path}
@@ -27,7 +18,26 @@ function MovieList({ movie }) {
     />
   ));
 
+  if (loading && !error) {
+    return <Spiner />;
+  }
+
+  if (error) {
+    return <Alert />;
+  }
+
   return <div className="movie__card-wrapper">{element}</div>;
-}
+};
+MovieList.defaultProps = {
+  movie: {},
+  loading: true,
+  error: false,
+};
+
+MovieList.propTypes = {
+  movie: PropTypes.arrayOf(PropTypes.object),
+  loading: PropTypes.bool,
+  error: PropTypes.bool,
+};
 
 export default MovieList;

@@ -10,6 +10,8 @@ export default class App extends Component {
 
   state = {
     movie: [],
+    loading: true,
+    error: false,
   };
 
   componentDidMount() {
@@ -24,22 +26,33 @@ export default class App extends Component {
     });
   };
 
-  updateMovies() {
-    this.movieService.getMovie('return').then((film) => {
-      this.setState({
-        movie: [...film],
-      });
+  onError = () => {
+    this.setState({
+      error: true,
+      loading: true,
     });
+  };
+
+  updateMovies() {
+    this.movieService
+      .getMovie('return')
+      .then((film) => {
+        this.setState({
+          movie: [...film],
+          loading: false,
+        });
+      })
+      .catch(this.onError);
   }
 
   render() {
-    const { movie } = this.state;
+    const { movie, loading, error } = this.state;
 
     return (
       <section className="app">
         <div className="app__wrapper">
           <Search search={this.setValue} />
-          <MovieList movie={movie} />
+          <MovieList movie={movie} loading={loading} error={error} />
         </div>
       </section>
     );

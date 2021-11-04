@@ -3,27 +3,10 @@ import PropTypes from 'prop-types';
 import format from 'date-fns/format';
 import './movie.css';
 
-function Movie({ img, title, date, description, rating }) {
-  Movie.defaultProps = {
-    img: '',
-    title: '',
-    date: '',
-    description: '',
-    rating: '',
-  };
-
-  Movie.propTypes = {
-    img: PropTypes.string,
-    title: PropTypes.string,
-    date: PropTypes.string,
-    description: PropTypes.string,
-    rating: PropTypes.string,
-  };
-
-  let newDate;
-
+const Movie = ({ img, title, date, description, rating }) => {
   const picture = 'https://image.tmdb.org/t/p/w500';
 
+  let newDate;
   if (date !== '') {
     newDate = format(new Date(date), 'PPP');
   }
@@ -42,7 +25,7 @@ function Movie({ img, title, date, description, rating }) {
           <h2>{title}</h2>
           <div className="movie__rating">{rating}</div>
         </div>
-        <span className="date">{!newDate ? 'No date' : newDate}</span>
+        <span className="date">{!newDate ? 'No release date' : newDate}</span>
         <div className="movie__genre">
           <span>Action</span>
           <span>Drama</span>
@@ -51,6 +34,22 @@ function Movie({ img, title, date, description, rating }) {
       </div>
     </div>
   );
-}
+};
 
 export default Movie;
+
+Movie.defaultProps = {
+  img: '',
+  title: '',
+  date: '',
+  description: '',
+  rating: '',
+};
+
+Movie.propTypes = {
+  img: PropTypes.string,
+  title: PropTypes.string,
+  date: PropTypes.string,
+  description: PropTypes.string,
+  rating: PropTypes.number,
+};

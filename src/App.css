@@ -9,6 +9,7 @@ body, h1, h2, p {
 
 .app {
   background-color: #E5E5E5;
+  min-height: 1000px;
 }
 
 .app__wrapper {

@@ -14,6 +14,3 @@ export default class MovieService {
     return res.results;
   }
 }
-
-const movie = new MovieService();
-movie.getMovie().then((body) => console.log(body));

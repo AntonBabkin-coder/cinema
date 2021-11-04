@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Movie from '../movie/movie';
 import './movieList.css';
 import Spiner from '../spiner/Spiner';
-import Alert from '../Alert/Alert';
+// import Alert from '../Alert/Alert';
 
 const MovieList = ({ movie, loading, error }) => {
   const element = movie.map((item) => (
@@ -22,9 +22,9 @@ const MovieList = ({ movie, loading, error }) => {
     return <Spiner />;
   }
 
-  if (error) {
-    return <Alert />;
-  }
+  // if (error) {
+  //   return <Alert />;
+  // }
 
   return <div className="movie__card-wrapper">{element}</div>;
 };

@@ -1,6 +1,6 @@
 export default class MovieService {
   async getResource(url) {
-    const api = 'http://api.themoviedb.org/3/search/movie/?api_key=d463c0adb705ecd658e35005ed93e66d&query=';
+    const api = 'https://api.themoviedb.org/3/search/movie/?api_key=d463c0adb705ecd658e35005ed93e66d&query=';
     const res = await fetch(`${api}${url}`);
 
     if (!res.ok) {

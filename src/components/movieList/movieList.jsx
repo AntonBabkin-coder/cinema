@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Movie from '../movie/movie';
+import Movie from '../Movie/movie';
 import './movieList.css';
 import Spiner from '../spiner/Spiner';
 import Alert from '../Alert/Alert';

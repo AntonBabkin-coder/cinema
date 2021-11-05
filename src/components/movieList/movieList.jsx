@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Movie from '../Movie/movie';
+import Movie from '../Movie/Movie';
 import './movieList.css';
-import Spiner from '../spiner/Spiner';
+import Spiner from '../Spiner/Spiner';
 import Alert from '../Alert/Alert';
 
 const MovieList = ({ movie, loading, error }) => {

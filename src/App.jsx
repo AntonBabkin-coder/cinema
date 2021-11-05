@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import './App.css';
 
-import MovieService from './servises/api';
-import MovieList from './components/movieList/movieList';
-import Search from './components/search/search';
+import MovieService from './servises/Api';
+import MovieList from './components/MovieList/MovieList';
+import Search from './components/Search/Search';
 
 export default class App extends Component {
   movieService = new MovieService();

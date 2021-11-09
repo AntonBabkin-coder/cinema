@@ -10,8 +10,6 @@ function Search({ search }) {
   );
 }
 
-export default Search;
-
 Search.defaultProps = {
   search: () => {},
 };
@@ -19,3 +17,5 @@ Search.defaultProps = {
 Search.propTypes = {
   search: PropTypes.func,
 };
+
+export default Search;

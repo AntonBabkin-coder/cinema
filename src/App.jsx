@@ -41,7 +41,7 @@ export default class App extends Component {
 
   paginate = (pageNumber) => {
     const { textValue } = this.state;
-    console.log(pageNumber);
+
     this.setState({
       currentPage: pageNumber,
     });

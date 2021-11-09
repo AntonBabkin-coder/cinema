@@ -14,11 +14,4 @@ export default class MovieService {
     const res = await this.getResource(`${!movie ? 'return' : movie}&page=${page}`);
     return res.results;
   }
-
-  // async getAllMovie(number) {
-  //   const res = await this.getResource(`&page=${number}`);
-  //   return res.results;
-  // }
 }
-
-// ${!movie ? 'return' : movie}

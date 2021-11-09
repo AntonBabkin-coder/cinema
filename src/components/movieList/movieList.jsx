@@ -34,13 +34,11 @@ const MovieList = ({ loading, error, movie }) => {
 };
 MovieList.defaultProps = {
   movie: {},
-  // currentMovie: {},
   loading: false,
   error: false,
 };
 
 MovieList.propTypes = {
-  // currentMovie: PropTypes.arrayOf(PropTypes.object),
   loading: PropTypes.bool,
   error: PropTypes.bool,
   movie: PropTypes.arrayOf(PropTypes.object),

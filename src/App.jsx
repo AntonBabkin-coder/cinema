@@ -27,7 +27,6 @@ export default class App extends Component {
       currentPage: 1,
     });
     const { currentPage } = this.state;
-
     this.movieService
       .getMovie(text.target.value, currentPage)
       .then((film) => {
@@ -41,7 +40,6 @@ export default class App extends Component {
 
   paginate = (pageNumber) => {
     const { textValue } = this.state;
-
     this.setState({
       currentPage: pageNumber,
     });
@@ -78,7 +76,6 @@ export default class App extends Component {
 
   render() {
     const { movie, loading, error, currentPage } = this.state;
-
     return (
       <section className="app">
         <div className="app__wrapper">

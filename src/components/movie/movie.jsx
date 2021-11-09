@@ -7,18 +7,15 @@ import icon from './inf.jpeg';
 const Movie = ({ img, title, date, description, rating }) => {
   const picture = 'https://image.tmdb.org/t/p/w500';
   const moviePicture = picture + img;
-
   let newDate;
   if (date !== '') {
     newDate = format(new Date(date), 'PPP');
   }
-
   let text = description;
   if (text.length > 150) {
     const etc = '...';
     text = text.slice(0, 150) + etc;
   }
-
   return (
     <div className="movie__card">
       <img src={img ? moviePicture : icon} alt="film" />

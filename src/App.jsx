@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import './App.css';
-
+import debounce from 'lodash.debounce';
 import MovieService from './servises/Api';
 import MovieList from './components/MovieList/MovieList';
 import Search from './components/Search/Search';
+import Pagination from './components/Pagination/Pagination';
 
 export default class App extends Component {
   movieService = new MovieService();
@@ -12,18 +13,47 @@ export default class App extends Component {
     movie: [],
     loading: false,
     error: false,
+    currentPage: 1,
+    textValue: '',
   };
 
   componentDidMount() {
     this.updateMovies();
   }
 
-  setValue = (text) => {
-    this.movieService.getMovie(text.target.value).then((film) => {
-      this.setState({
-        movie: [...film],
-      });
+  setValue = debounce((text) => {
+    this.setState({
+      textValue: text.target.value,
+      currentPage: 1,
     });
+    const { currentPage } = this.state;
+
+    this.movieService
+      .getMovie(text.target.value, currentPage)
+      .then((film) => {
+        this.setState({
+          movie: [...film],
+          loading: true,
+        });
+      })
+      .catch(this.onError);
+  }, 500);
+
+  paginate = (pageNumber) => {
+    const { textValue } = this.state;
+    console.log(pageNumber);
+    this.setState({
+      currentPage: pageNumber,
+    });
+    this.movieService
+      .getMovie(textValue, pageNumber)
+      .then((film) => {
+        this.setState({
+          movie: [...film],
+          loading: true,
+        });
+      })
+      .catch(this.onError);
   };
 
   onError = () => {
@@ -34,8 +64,9 @@ export default class App extends Component {
   };
 
   updateMovies() {
+    const { currentPage } = this.state;
     this.movieService
-      .getMovie('return')
+      .getMovie('return', currentPage)
       .then((film) => {
         this.setState({
           movie: [...film],
@@ -46,13 +77,14 @@ export default class App extends Component {
   }
 
   render() {
-    const { movie, loading, error } = this.state;
+    const { movie, loading, error, currentPage } = this.state;
 
     return (
       <section className="app">
         <div className="app__wrapper">
           <Search search={this.setValue} />
           <MovieList movie={movie} loading={loading} error={error} />
+          <Pagination paginate={this.paginate} currentPage={currentPage} />
         </div>
       </section>
     );

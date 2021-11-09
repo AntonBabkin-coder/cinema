@@ -4,8 +4,9 @@ import Movie from '../Movie/Movie';
 import './movieList.css';
 import Spiner from '../Spiner/Spiner';
 import Alert from '../Alert/Alert';
+import NoMovie from '../Alert/NoMovie';
 
-const MovieList = ({ movie, loading, error }) => {
+const MovieList = ({ loading, error, movie }) => {
   const element = movie.map((item) => (
     <Movie
       key={item.id}
@@ -18,26 +19,31 @@ const MovieList = ({ movie, loading, error }) => {
     />
   ));
 
-  if (!loading && !error) {
-    return <Spiner />;
-  }
+  const spiner = !loading && !error ? <Spiner /> : null;
+  const errorAlert = error ? <Alert /> : null;
+  const noMovie = element.length === 0 && loading ? <NoMovie /> : null;
 
-  if (error) {
-    return <Alert />;
-  }
-
-  return <div className="movie__card-wrapper">{element}</div>;
+  return (
+    <div className="movie__card-wrapper">
+      {element}
+      {noMovie}
+      {errorAlert}
+      {spiner}
+    </div>
+  );
 };
 MovieList.defaultProps = {
   movie: {},
-  loading: true,
+  // currentMovie: {},
+  loading: false,
   error: false,
 };
 
 MovieList.propTypes = {
-  movie: PropTypes.arrayOf(PropTypes.object),
+  // currentMovie: PropTypes.arrayOf(PropTypes.object),
   loading: PropTypes.bool,
   error: PropTypes.bool,
+  movie: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default MovieList;

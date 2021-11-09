@@ -35,8 +35,6 @@ const Movie = ({ img, title, date, description, rating }) => {
   );
 };
 
-export default Movie;
-
 Movie.defaultProps = {
   img: '',
   title: '',
@@ -52,3 +50,5 @@ Movie.propTypes = {
   description: PropTypes.string,
   rating: PropTypes.number,
 };
+
+export default Movie;

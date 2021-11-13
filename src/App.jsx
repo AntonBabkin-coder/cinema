@@ -76,7 +76,6 @@ export default class App extends Component {
 
   render() {
     const { movie, loading, error, currentPage } = this.state;
-
     return (
       <section className="app">
         <div className="app__wrapper">

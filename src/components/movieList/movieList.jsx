@@ -18,6 +18,7 @@ const MovieList = ({ loading, error, movie }) => {
       dateFormat="PPP"
     />
   ));
+
   const spiner = !loading && !error ? <Spiner /> : null;
   const errorAlert = error ? <Alert /> : null;
   const noMovie = element.length === 0 && loading ? <NoMovie /> : null;

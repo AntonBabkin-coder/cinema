@@ -76,12 +76,13 @@ export default class App extends Component {
 
   render() {
     const { movie, loading, error, currentPage } = this.state;
+
     return (
       <section className="app">
         <div className="app__wrapper">
           <Search search={this.setValue} />
           <MovieList movie={movie} loading={loading} error={error} />
-          <Pagination paginate={this.paginate} currentPage={currentPage} />
+          <Pagination paginate={this.paginate} currentPage={currentPage} loading={loading} />
         </div>
       </section>
     );

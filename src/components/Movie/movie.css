@@ -21,6 +21,7 @@ img {
 }
 
 .movie__description {
+    position: relative;
     width: 265px;
     padding: 10px;
 }
@@ -31,16 +32,23 @@ img {
 }
 
 .movie__genre {
+    display: flex;
+    flex-wrap: wrap;
     margin-top: 10px;
-    margin-bottom: 10px;
+    
 }
 
 .movie__genre span {
+    margin-bottom: 5px;
     border: 2px solid #D9D9D9;
     border-radius: 3px;
     margin-right: 5px;
     color: rgb(150, 143, 143);
-    padding: 1px 3px;
+    padding: 0 3px;
+}
+
+.movie__genre span:last-child {
+    margin-right: 0;
 }
 
 .movie__title-block {

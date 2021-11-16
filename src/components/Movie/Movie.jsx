@@ -3,14 +3,22 @@ import PropTypes from 'prop-types';
 import format from 'date-fns/format';
 import './movie.css';
 import icon from './inf.jpeg';
+import RateStars from '../Rate/Rate';
+import Genre from '../Genre/Genre';
 
-const Movie = ({ img, title, date, description, rating }) => {
+const Movie = ({ img, title, date, description, rating, genre, genreArr }) => {
+  const movieGenre = [...genre];
+
+  const element = genreArr.map(({ id, name }) => (movieGenre.includes(id) ? <Genre name={name} key={id} /> : null));
+
   const picture = 'https://image.tmdb.org/t/p/w500';
   const moviePicture = picture + img;
+
   let newDate;
   if (date !== '') {
     newDate = format(new Date(date), 'PPP');
   }
+
   let text = description;
   if (text.length > 150) {
     const etc = '...';
@@ -25,11 +33,10 @@ const Movie = ({ img, title, date, description, rating }) => {
           <div className="movie__rating">{rating}</div>
         </div>
         <span className="date">{!newDate ? 'No release date' : newDate}</span>
-        <div className="movie__genre">
-          <span>Action</span>
-          <span>Drama</span>
-        </div>
+
+        <div className="movie__genre">{element}</div>
         <p>{text}</p>
+        <RateStars />
       </div>
     </div>
   );
@@ -41,6 +48,8 @@ Movie.defaultProps = {
   date: '',
   description: '',
   rating: '',
+  genre: [],
+  genreArr: [],
 };
 
 Movie.propTypes = {
@@ -49,6 +58,8 @@ Movie.propTypes = {
   date: PropTypes.string,
   description: PropTypes.string,
   rating: PropTypes.number,
+  genre: PropTypes.arrayOf(PropTypes.number),
+  genreArr: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default Movie;

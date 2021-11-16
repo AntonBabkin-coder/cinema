@@ -15,10 +15,20 @@ export default class App extends Component {
     error: false,
     currentPage: 1,
     textValue: '',
+    genreArr: [],
   };
 
   componentDidMount() {
     this.updateMovies();
+    this.getUpGenres();
+  }
+
+  getUpGenres() {
+    this.movieService.getGenres().then((genres) => {
+      this.setState({
+        genreArr: [...genres],
+      });
+    });
   }
 
   setValue = debounce((text) => {
@@ -75,12 +85,12 @@ export default class App extends Component {
   }
 
   render() {
-    const { movie, loading, error, currentPage } = this.state;
+    const { movie, loading, error, currentPage, genreArr } = this.state;
     return (
       <section className="app">
         <div className="app__wrapper">
           <Search search={this.setValue} />
-          <MovieList movie={movie} loading={loading} error={error} />
+          <MovieList movie={movie} loading={loading} error={error} genreArr={genreArr} />
           <Pagination paginate={this.paginate} currentPage={currentPage} loading={loading} />
         </div>
       </section>

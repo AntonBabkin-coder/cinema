@@ -6,7 +6,7 @@ import icon from './inf.jpeg';
 import RateStars from '../Rate/Rate';
 import Genre from '../Genre/Genre';
 
-const Movie = ({ img, title, date, description, rating, genre, genreArr }) => {
+const Movie = ({ img, title, date, description, rating, genre, genreArr, getRatedMovie }) => {
   const movieGenre = [...genre];
 
   const element = genreArr.map(({ id, name }) => (movieGenre.includes(id) ? <Genre name={name} key={id} /> : null));
@@ -36,7 +36,7 @@ const Movie = ({ img, title, date, description, rating, genre, genreArr }) => {
 
         <div className="movie__genre">{element}</div>
         <p>{text}</p>
-        <RateStars />
+        <RateStars getRatedMovie={(value) => getRatedMovie(value)} />
       </div>
     </div>
   );
@@ -50,6 +50,7 @@ Movie.defaultProps = {
   rating: '',
   genre: [],
   genreArr: [],
+  getRatedMovie: () => {},
 };
 
 Movie.propTypes = {
@@ -60,6 +61,7 @@ Movie.propTypes = {
   rating: PropTypes.number,
   genre: PropTypes.arrayOf(PropTypes.number),
   genreArr: PropTypes.arrayOf(PropTypes.object),
+  getRatedMovie: PropTypes.func,
 };
 
 export default Movie;

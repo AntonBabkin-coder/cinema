@@ -6,7 +6,7 @@ import Spiner from '../Spiner/Spiner';
 import Alert from '../Alert/Alert';
 import NoMovie from '../Alert/NoMovie';
 
-const MovieList = ({ loading, error, movie, genreArr }) => {
+const MovieList = ({ loading, error, movie, genreArr, getRatedMovie }) => {
   const element = movie.map((item) => (
     <Movie
       key={item.id}
@@ -18,6 +18,7 @@ const MovieList = ({ loading, error, movie, genreArr }) => {
       dateFormat="PPP"
       genre={item.genre_ids}
       genreArr={genreArr}
+      getRatedMovie={(value) => getRatedMovie(item.id, value)}
     />
   ));
 
@@ -38,6 +39,7 @@ MovieList.defaultProps = {
   loading: false,
   error: false,
   genreArr: [],
+  getRatedMovie: () => {},
 };
 
 MovieList.propTypes = {
@@ -45,6 +47,7 @@ MovieList.propTypes = {
   error: PropTypes.bool,
   movie: PropTypes.arrayOf(PropTypes.object),
   genreArr: PropTypes.arrayOf(PropTypes.object),
+  getRatedMovie: PropTypes.func,
 };
 
 export default MovieList;

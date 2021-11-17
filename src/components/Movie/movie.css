@@ -78,9 +78,14 @@ p {
 } 
 
 @media (max-width: 768px) {
+    .movie__card-wrapper {
+        flex-direction: column;
+        max-width: 420px;
+    }
+
     .movie__card {
         position: relative;
-        height: 245px;
+        min-height: 245px;
         max-width: 387px;
         margin: 10px auto;
     }

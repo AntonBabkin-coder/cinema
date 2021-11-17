@@ -7,6 +7,10 @@ input {
     border-radius: 4px;
   }
 
+  .search {
+    text-align: center;
+  }
+
   @media (max-width: 768px) {
     input {
         max-width: 387px;

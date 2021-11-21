@@ -20,6 +20,8 @@ export default class App extends Component {
     genreArr: [],
     idSession: '',
     ratedMovies: [],
+    ratedId: {},
+    totalPages: 800,
   };
 
   componentDidMount() {
@@ -30,8 +32,6 @@ export default class App extends Component {
 
   getSession() {
     this.movieService.newQuestSession().then((idSession) => {
-      console.log(idSession);
-
       this.setState({
         idSession,
       });
@@ -47,10 +47,6 @@ export default class App extends Component {
   }
 
   setValue = debounce((text) => {
-    this.setState({
-      textValue: text.target.value,
-      currentPage: 1,
-    });
     const { currentPage } = this.state;
     this.movieService
       .getMovie(text.target.value, currentPage)
@@ -58,9 +54,16 @@ export default class App extends Component {
         this.setState({
           movie: [...film],
           loading: true,
+          textValue: text.target.value,
+          currentPage: 1,
         });
       })
       .catch(this.onError);
+    this.movieService.getPages(text.target.value, currentPage).then((obj) => {
+      this.setState({
+        totalPages: obj.total_pages * 10,
+      });
+    });
   }, 500);
 
   onError = () => {
@@ -76,13 +79,17 @@ export default class App extends Component {
       this.setState({
         ratedMovies: [...movies.results],
       });
-      // this.movieService.getRatedMovie();
     });
   }
 
   getRatedMovie(id, value) {
     const { idSession } = this.state;
-    this.movieService.postRated(id, value, idSession).then((res) => console.log(res));
+    this.movieService.postRated(id, value, idSession).then(() =>
+      this.setState(({ ratedId }) => {
+        const rateObj = { ...ratedId, [id]: value };
+        return { ratedId: rateObj };
+      })
+    );
   }
 
   paginate = (pageNumber) => {
@@ -116,7 +123,7 @@ export default class App extends Component {
 
   render() {
     const { TabPane } = Tabs;
-    const { movie, loading, error, currentPage, genreArr, ratedMovies } = this.state;
+    const { movie, loading, error, currentPage, genreArr, ratedMovies, ratedId, totalPages } = this.state;
 
     return (
       <section className="app">
@@ -132,11 +139,21 @@ export default class App extends Component {
                 getRatedMovie={(id, value) => this.getRatedMovie(id, value)}
               />
               <div className="pagination">
-                <Pagination paginate={this.paginate} currentPage={currentPage} loading={loading} />
+                <Pagination
+                  paginate={this.paginate}
+                  currentPage={currentPage}
+                  loading={loading}
+                  totalPages={totalPages}
+                />
               </div>
             </TabPane>
             <TabPane tab="Tab 2" key="2">
-              <Rated ratedMovies={ratedMovies} />
+              <Rated
+                ratedMovies={ratedMovies}
+                genreArr={genreArr}
+                getRatedMovie={(id, value) => this.getRatedMovie(id, value)}
+                ratedId={ratedId}
+              />
             </TabPane>
           </Tabs>
         </div>

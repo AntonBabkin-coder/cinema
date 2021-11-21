@@ -25,6 +25,7 @@ const MovieList = ({ loading, error, movie, genreArr, getRatedMovie }) => {
   const spiner = !loading && !error ? <Spiner /> : null;
   const errorAlert = error ? <Alert /> : null;
   const noMovie = element.length === 0 && loading ? <NoMovie /> : null;
+
   return (
     <div className="movie__card-wrapper">
       {element}

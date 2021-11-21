@@ -16,6 +16,13 @@ export default class MovieService {
     return res.results;
   }
 
+  async getPages(textValue, page) {
+    const res = await this.getResource(
+      `search/movie/?api_key=d463c0adb705ecd658e35005ed93e66d&query=${!textValue ? 'return' : textValue}&page=${page}`
+    );
+    return res;
+  }
+
   async getGenres() {
     const res = await this.getResource('genre/movie/list?api_key=d463c0adb705ecd658e35005ed93e66d&language=en-US');
     return res.genres;
@@ -27,11 +34,9 @@ export default class MovieService {
   }
 
   async getRated(id) {
-    console.log(id);
     const res = await this.getResource(
       `guest_session/${id}/rated/movies?api_key=d463c0adb705ecd658e35005ed93e66d&language=en-US&sort_by=created_at.asc`
     );
-    console.log(res);
     return res;
   }
 
@@ -46,7 +51,6 @@ export default class MovieService {
         }),
       }
     );
-
     const result = await res.json();
     return result;
   }

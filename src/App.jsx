@@ -22,6 +22,7 @@ export default class App extends Component {
     ratedMovies: [],
     ratedId: {},
     totalPages: 800,
+    visible: true,
   };
 
   componentDidMount() {
@@ -60,6 +61,16 @@ export default class App extends Component {
       })
       .catch(this.onError);
     this.movieService.getPages(text.target.value, currentPage).then((obj) => {
+      if (obj.total_pages <= 1) {
+        this.setState({
+          visible: false,
+        });
+      }
+      if (obj.total_pages > 1) {
+        this.setState({
+          visible: true,
+        });
+      }
       this.setState({
         totalPages: obj.total_pages * 10,
       });
@@ -123,7 +134,7 @@ export default class App extends Component {
 
   render() {
     const { TabPane } = Tabs;
-    const { movie, loading, error, currentPage, genreArr, ratedMovies, ratedId, totalPages } = this.state;
+    const { movie, loading, error, currentPage, genreArr, ratedMovies, ratedId, totalPages, visible } = this.state;
 
     return (
       <section className="app">
@@ -139,12 +150,14 @@ export default class App extends Component {
                 getRatedMovie={(id, value) => this.getRatedMovie(id, value)}
               />
               <div className="pagination">
-                <Pagination
-                  paginate={this.paginate}
-                  currentPage={currentPage}
-                  loading={loading}
-                  totalPages={totalPages}
-                />
+                {visible && (
+                  <Pagination
+                    paginate={this.paginate}
+                    currentPage={currentPage}
+                    loading={loading}
+                    totalPages={totalPages}
+                  />
+                )}
               </div>
             </TabPane>
             <TabPane tab="Tab 2" key="2">

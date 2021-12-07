@@ -4,7 +4,7 @@ import debounce from 'lodash.debounce';
 import { Tabs } from 'antd';
 import MovieService from './servises/Api';
 import MovieList from './components/MovieList/MovieList';
-import Rated from './components/Rated/Rated';
+import RatedFilms from './components/RatedFilms/RatedFilms';
 import Search from './components/Search/Search';
 import Pagination from './components/Pagination/Pagination';
 
@@ -12,23 +12,24 @@ export default class App extends Component {
   movieService = new MovieService();
 
   state = {
-    movie: [],
+    movies: [],
     loading: false,
     error: false,
     currentPage: 1,
     textValue: '',
-    genreArr: [],
+    genres: [],
     idSession: '',
     ratedMovies: [],
     ratedId: {},
     totalPages: 800,
-    visible: true,
+    visiblePaginate: true,
+    popular: true,
   };
 
   componentDidMount() {
     this.getSession();
-    this.updateMovies();
     this.getUpGenres();
+    this.popularMovie('1');
   }
 
   getSession() {
@@ -40,41 +41,51 @@ export default class App extends Component {
   }
 
   getUpGenres() {
-    this.movieService.getGenres().then((genres) => {
+    this.movieService.getGenres().then((genresArr) => {
       this.setState({
-        genreArr: [...genres],
+        genres: [...genresArr],
       });
     });
   }
 
   setValue = debounce((text) => {
     const { currentPage } = this.state;
-    this.movieService
-      .getMovie(text.target.value, currentPage)
-      .then((film) => {
-        this.setState({
-          movie: [...film],
-          loading: true,
-          textValue: text.target.value,
-          currentPage: 1,
-        });
-      })
-      .catch(this.onError);
-    this.movieService.getPages(text.target.value, currentPage).then((obj) => {
-      if (obj.total_pages <= 1) {
-        this.setState({
-          visible: false,
-        });
-      }
-      if (obj.total_pages > 1) {
-        this.setState({
-          visible: true,
-        });
-      }
+    if (text.target.value === '') {
       this.setState({
-        totalPages: obj.total_pages * 10,
+        popular: true,
+        totalPages: 800,
+        currentPage: 1,
       });
-    });
+      this.popularMovie('1');
+    } else {
+      this.movieService
+        .getMovie(text.target.value, currentPage)
+        .then((film) => {
+          this.setState({
+            movies: [...film],
+            loading: true,
+            textValue: text.target.value,
+            currentPage: 1,
+            popular: false,
+          });
+        })
+        .catch(this.onError);
+      this.movieService.getPages(text.target.value, currentPage).then((obj) => {
+        if (obj.total_pages <= 1) {
+          this.setState({
+            visiblePaginate: false,
+          });
+        }
+        if (obj.total_pages > 1) {
+          this.setState({
+            visiblePaginate: true,
+          });
+        }
+        this.setState({
+          totalPages: obj.total_pages * 10,
+        });
+      });
+    }
   }, 500);
 
   onError = () => {
@@ -104,28 +115,35 @@ export default class App extends Component {
   }
 
   paginate = (pageNumber) => {
-    const { textValue } = this.state;
+    const { textValue, popular } = this.state;
     this.setState({
       currentPage: pageNumber,
     });
+    if (popular) {
+      this.popularMovie(pageNumber);
+    } else {
+      this.searchMovies(textValue, pageNumber);
+    }
+  };
+
+  popularMovie(page) {
     this.movieService
-      .getMovie(textValue, pageNumber)
+      .getPopular(page)
       .then((film) => {
         this.setState({
-          movie: [...film],
+          movies: [...film],
           loading: true,
         });
       })
       .catch(this.onError);
-  };
+  }
 
-  updateMovies() {
-    const { currentPage } = this.state;
+  searchMovies(text, page) {
     this.movieService
-      .getMovie('return', currentPage)
+      .getMovie(text, page)
       .then((film) => {
         this.setState({
-          movie: [...film],
+          movies: [...film],
           loading: true,
         });
       })
@@ -134,8 +152,8 @@ export default class App extends Component {
 
   render() {
     const { TabPane } = Tabs;
-    const { movie, loading, error, currentPage, genreArr, ratedMovies, ratedId, totalPages, visible } = this.state;
-
+    const { movies, loading, error, currentPage, genres, ratedMovies, ratedId, totalPages, visiblePaginate } =
+      this.state;
     return (
       <section className="app">
         <div className="app__wrapper">
@@ -143,14 +161,14 @@ export default class App extends Component {
             <TabPane tab="Tab 1" key="1">
               <Search search={this.setValue} />
               <MovieList
-                movie={movie}
+                movies={movies}
                 loading={loading}
                 error={error}
-                genreArr={genreArr}
+                genres={genres}
                 getRatedMovie={(id, value) => this.getRatedMovie(id, value)}
               />
               <div className="pagination">
-                {visible && (
+                {visiblePaginate && (
                   <Pagination
                     paginate={this.paginate}
                     currentPage={currentPage}
@@ -161,9 +179,9 @@ export default class App extends Component {
               </div>
             </TabPane>
             <TabPane tab="Tab 2" key="2">
-              <Rated
+              <RatedFilms
                 ratedMovies={ratedMovies}
-                genreArr={genreArr}
+                genres={genres}
                 getRatedMovie={(id, value) => this.getRatedMovie(id, value)}
                 ratedId={ratedId}
               />

@@ -1,15 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Alert } from 'antd';
 import Movie from '../Movie/Movie';
-import './movieList.css';
-import Spiner from '../Spiner/Spiner';
 
-const MovieList = ({ loading, error, movies, genres, getRatedMovie }) => {
-  const moviesElement = movies.map((item) => (
+const RatedFilms = ({ ratedMovies, genres, getRatedMovie, ratedId }) => {
+  const element = ratedMovies.map((item) => (
     <Movie
+      ids={item.id}
       key={item.id}
-      img={item.poster_path}
+      img={item.backdrop_path}
       title={item.original_title}
       date={item.release_date}
       description={item.overview}
@@ -18,40 +16,21 @@ const MovieList = ({ loading, error, movies, genres, getRatedMovie }) => {
       genre={item.genre_ids}
       genres={genres}
       getRatedMovie={(value) => getRatedMovie(item.id, value)}
+      ratedId={ratedId}
     />
   ));
-
-  const spiner = !loading && !error ? <Spiner /> : null;
-
-  return (
-    <div className="movie__card-wrapper">
-      {moviesElement}
-      {moviesElement.length === 0 && loading && (
-        <Alert
-          message="No films"
-          description="Unfortunately, there are no movies for your request"
-          type="warning"
-          showIcon
-          closable
-        />
-      )}
-      {error && <Alert message="Error" description="Сheck your internet connection" type="error" showIcon closable />}
-      {spiner}
-    </div>
-  );
+  return <div className="movie__card-wrapper">{element}</div>;
 };
-MovieList.defaultProps = {
-  movies: {},
-  loading: false,
-  error: false,
+
+RatedFilms.defaultProps = {
+  ratedMovies: [],
   genres: [],
   getRatedMovie: () => {},
+  ratedId: {},
 };
 
-MovieList.propTypes = {
-  loading: PropTypes.bool,
-  error: PropTypes.bool,
-  movies: PropTypes.arrayOf(
+RatedFilms.propTypes = {
+  ratedMovies: PropTypes.arrayOf(
     PropTypes.shape({
       adult: PropTypes.bool,
       backdrop_path: PropTypes.string,
@@ -76,6 +55,7 @@ MovieList.propTypes = {
     })
   ),
   getRatedMovie: PropTypes.func,
+  ratedId: PropTypes.objectOf(PropTypes.number),
 };
 
-export default MovieList;
+export default RatedFilms;

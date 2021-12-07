@@ -3,28 +3,15 @@ import PropTypes from 'prop-types';
 import format from 'date-fns/format';
 import './movie.css';
 import icon from './inf.jpeg';
-import RateStars from '../Rate/Rate';
+import RateStars from '../RateStars/RateStars';
 import Genre from '../Genre/Genre';
+import changeColors from '../Helper/ChangeColors';
 
-const Movie = ({ img, title, date, description, rating, genre, genreArr, getRatedMovie, ratedId, ids }) => {
+const Movie = ({ img, title, date, description, rating, genre, genres, getRatedMovie, ratedId, ids }) => {
   const movieGenre = [...genre];
 
-  const element = genreArr.map(({ id, name }) => (movieGenre.includes(id) ? <Genre name={name} key={id} /> : null));
+  const element = genres.map(({ id, name }) => (movieGenre.includes(id) ? <Genre name={name} key={id} /> : null));
   const setValue = ratedId[ids] ? ratedId[ids] : 0;
-  let colorRating = '';
-
-  if (rating < 3) {
-    colorRating = '#E90000';
-  }
-  if (rating >= 3 && rating < 5) {
-    colorRating = '#E97E00';
-  }
-  if (rating >= 5 && rating < 7) {
-    colorRating = '#E9D100';
-  }
-  if (rating >= 7) {
-    colorRating = '#66E900';
-  }
 
   const picture = 'https://image.tmdb.org/t/p/w500';
   const moviePicture = picture + img;
@@ -39,14 +26,14 @@ const Movie = ({ img, title, date, description, rating, genre, genreArr, getRate
     const etc = '...';
     text = text.slice(0, 150) + etc;
   }
-  const style = { borderColor: colorRating };
+
   return (
     <div className="movie__card">
       <img src={img ? moviePicture : icon} alt="film" />
       <div className="movie__description">
         <div className="movie__title-block">
           <h2>{title}</h2>
-          <div className="movie__rating" style={style}>
+          <div className="movie__rating" style={{ borderColor: changeColors(rating) }}>
             {rating}
           </div>
         </div>
@@ -66,7 +53,7 @@ Movie.defaultProps = {
   description: '',
   rating: '',
   genre: [],
-  genreArr: [],
+  genres: [],
   getRatedMovie: () => {},
   ratedId: {},
   ids: 0,
@@ -79,7 +66,12 @@ Movie.propTypes = {
   description: PropTypes.string,
   rating: PropTypes.number,
   genre: PropTypes.arrayOf(PropTypes.number),
-  genreArr: PropTypes.arrayOf(PropTypes.object),
+  genres: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+    })
+  ),
   getRatedMovie: PropTypes.func,
 
   ratedId: PropTypes.objectOf(PropTypes.number),

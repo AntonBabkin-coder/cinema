@@ -158,7 +158,7 @@ export default class App extends Component {
       <section className="app">
         <div className="app__wrapper">
           <Tabs defaultActiveKey="1" centered onChange={() => this.getIdSessionMovies()}>
-            <TabPane tab="Tab 1" key="1">
+            <TabPane tab="Search" key="1">
               <Search search={this.setValue} />
               <MovieList
                 movies={movies}
@@ -178,7 +178,7 @@ export default class App extends Component {
                 )}
               </div>
             </TabPane>
-            <TabPane tab="Tab 2" key="2">
+            <TabPane tab="Rated" key="2">
               <RatedFilms
                 ratedMovies={ratedMovies}
                 genres={genres}

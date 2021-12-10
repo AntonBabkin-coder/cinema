@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Alert } from 'antd';
 import { Movie } from '../Movie/Movie';
-import './movieList.css';
+import './MovieList.css';
 import { Spiner } from '../Spiner/Spiner';
 // import { AppContext } from '../../App';
 

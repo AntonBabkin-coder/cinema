@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './pagination.css';
+import './Pagination.css';
 import { Pagination } from 'antd';
 
 export const PaginationPage = ({ paginate, totalPages, currentPage }) => (

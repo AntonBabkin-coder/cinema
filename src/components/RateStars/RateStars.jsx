@@ -1,7 +1,7 @@
 import React from 'react';
 import { Rate } from 'antd';
 import PropTypes from 'prop-types';
-import './rateStars.css';
+import './RateStars.css';
 
 export const RateStars = ({ getRatedMovie, setValue }) => (
   <div className="rate">

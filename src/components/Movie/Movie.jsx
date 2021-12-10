@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import format from 'date-fns/format';
-import './movie.css';
+import './Movie.css';
 import icon from './inf.jpeg';
 import { RateStars } from '../RateStars/RateStars';
 import { Genre } from '../Genre/Genre';
@@ -25,6 +25,7 @@ export const Movie = ({ img, title, date, description, rating, genreIds, getRate
         const etc = '...';
         text = text.slice(0, 150) + etc;
       }
+
       return (
         <div className="movie__card">
           <img src={img ? process.env.REACT_APP_PICTURE + img : icon} alt="film" />

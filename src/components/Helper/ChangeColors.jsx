@@ -1,4 +1,4 @@
-export default function changeColors(rating) {
+export function changeColors(rating) {
   let colorRating = '';
 
   if (rating < 3) {

@@ -3,7 +3,7 @@ import { Rate } from 'antd';
 import PropTypes from 'prop-types';
 import './rateStars.css';
 
-const RateStars = ({ getRatedMovie, setValue }) => (
+export const RateStars = ({ getRatedMovie, setValue }) => (
   <div className="rate">
     <Rate
       allowHalf
@@ -24,5 +24,3 @@ RateStars.propTypes = {
   getRatedMovie: PropTypes.func,
   setValue: PropTypes.number,
 };
-
-export default RateStars;

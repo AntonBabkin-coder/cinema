@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Alert } from 'antd';
-import Movie from '../Movie/Movie';
+import { Movie } from '../Movie/Movie';
 import './movieList.css';
-import Spiner from '../Spiner/Spiner';
+import { Spiner } from '../Spiner/Spiner';
+// import { AppContext } from '../../App';
 
-const MovieList = ({ loading, error, movies, genres, getRatedMovie }) => {
+export const MovieList = ({ loading, error, movies, getRatedMovie }) => {
   const moviesElement = movies.map((item) => (
     <Movie
       key={item.id}
@@ -15,13 +16,10 @@ const MovieList = ({ loading, error, movies, genres, getRatedMovie }) => {
       description={item.overview}
       rating={item.vote_average}
       dateFormat="PPP"
-      genre={item.genre_ids}
-      genres={genres}
+      genreIds={item.genre_ids}
       getRatedMovie={(value) => getRatedMovie(item.id, value)}
     />
   ));
-
-  const spiner = !loading && !error ? <Spiner /> : null;
 
   return (
     <div className="movie__card-wrapper">
@@ -36,7 +34,7 @@ const MovieList = ({ loading, error, movies, genres, getRatedMovie }) => {
         />
       )}
       {error && <Alert message="Error" description="Сheck your internet connection" type="error" showIcon closable />}
-      {spiner}
+      {!loading && !error && <Spiner />}
     </div>
   );
 };
@@ -44,7 +42,7 @@ MovieList.defaultProps = {
   movies: {},
   loading: false,
   error: false,
-  genres: [],
+  // genres: [],
   getRatedMovie: () => {},
 };
 
@@ -69,13 +67,11 @@ MovieList.propTypes = {
       vote_count: PropTypes.number,
     })
   ),
-  genres: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number,
-      name: PropTypes.string,
-    })
-  ),
+  // genres: PropTypes.arrayOf(
+  //   PropTypes.shape({
+  //     id: PropTypes.number,
+  //     name: PropTypes.string,
+  //   })
+  // ),
   getRatedMovie: PropTypes.func,
 };
-
-export default MovieList;

@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Movie from '../Movie/Movie';
+import { Movie } from '../Movie/Movie';
 
-const RatedFilms = ({ ratedMovies, genres, getRatedMovie, ratedId }) => {
+export const RatedFilms = ({ ratedMovies, genres, getRatedMovie, ratedId }) => {
   const element = ratedMovies.map((item) => (
     <Movie
       ids={item.id}
@@ -57,5 +57,3 @@ RatedFilms.propTypes = {
   getRatedMovie: PropTypes.func,
   ratedId: PropTypes.objectOf(PropTypes.number),
 };
-
-export default RatedFilms;

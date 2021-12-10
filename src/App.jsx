@@ -2,13 +2,16 @@ import React, { Component } from 'react';
 import './App.css';
 import debounce from 'lodash.debounce';
 import { Tabs } from 'antd';
-import MovieService from './servises/Api';
-import MovieList from './components/MovieList/MovieList';
-import RatedFilms from './components/RatedFilms/RatedFilms';
-import Search from './components/Search/Search';
-import Pagination from './components/Pagination/Pagination';
+import { MovieService } from './servises/Api';
+import { MovieList } from './components/MovieList/MovieList';
+import { RatedFilms } from './components/RatedFilms/RatedFilms';
+import { Search } from './components/Search/Search';
+import { PaginationPage } from './components/Pagination/Pagination';
+import { AppContext } from './components/Context/Context';
 
-export default class App extends Component {
+// require('dotenv').config();
+
+export class App extends Component {
   movieService = new MovieService();
 
   state = {
@@ -29,7 +32,7 @@ export default class App extends Component {
   componentDidMount() {
     this.getSession();
     this.getUpGenres();
-    this.popularMovie('1');
+    this.getPopularMovie('1');
   }
 
   getSession() {
@@ -56,35 +59,32 @@ export default class App extends Component {
         totalPages: 800,
         currentPage: 1,
       });
-      this.popularMovie('1');
+      this.getPopularMovie('1');
     } else {
       this.movieService
-        .getMovie(text.target.value, currentPage)
+        .getMovies(text.target.value, currentPage)
         .then((film) => {
           this.setState({
-            movies: [...film],
+            movies: [...film.results],
             loading: true,
             textValue: text.target.value,
             currentPage: 1,
             popular: false,
+            totalPages: film.total_pages * 10,
           });
+
+          if (film.total_pages <= 1) {
+            this.setState({
+              visiblePaginate: false,
+            });
+          }
+          if (film.total_pages > 1) {
+            this.setState({
+              visiblePaginate: true,
+            });
+          }
         })
         .catch(this.onError);
-      this.movieService.getPages(text.target.value, currentPage).then((obj) => {
-        if (obj.total_pages <= 1) {
-          this.setState({
-            visiblePaginate: false,
-          });
-        }
-        if (obj.total_pages > 1) {
-          this.setState({
-            visiblePaginate: true,
-          });
-        }
-        this.setState({
-          totalPages: obj.total_pages * 10,
-        });
-      });
     }
   }, 500);
 
@@ -97,16 +97,22 @@ export default class App extends Component {
 
   getIdSessionMovies() {
     const { idSession } = this.state;
-    this.movieService.getRated(idSession).then((movies) => {
-      this.setState({
-        ratedMovies: [...movies.results],
-      });
+    this.setState({
+      ratedMovies: [],
     });
+    this.movieService
+      .getRated(idSession)
+      .then((movies) => {
+        this.setState({
+          ratedMovies: [...movies.results],
+        });
+      })
+      .catch(this.onError);
   }
 
   getRatedMovie(id, value) {
     const { idSession } = this.state;
-    this.movieService.postRated(id, value, idSession).then(() =>
+    this.movieService.ratedRequest(id, value, idSession).then(() =>
       this.setState(({ ratedId }) => {
         const rateObj = { ...ratedId, [id]: value };
         return { ratedId: rateObj };
@@ -114,21 +120,9 @@ export default class App extends Component {
     );
   }
 
-  paginate = (pageNumber) => {
-    const { textValue, popular } = this.state;
-    this.setState({
-      currentPage: pageNumber,
-    });
-    if (popular) {
-      this.popularMovie(pageNumber);
-    } else {
-      this.searchMovies(textValue, pageNumber);
-    }
-  };
-
-  popularMovie(page) {
+  getPopularMovie(page) {
     this.movieService
-      .getPopular(page)
+      .getPopularRequest(page)
       .then((film) => {
         this.setState({
           movies: [...film],
@@ -138,12 +132,24 @@ export default class App extends Component {
       .catch(this.onError);
   }
 
+  paginate = (pageNumber) => {
+    const { textValue, popular } = this.state;
+    this.setState({
+      currentPage: pageNumber,
+    });
+    if (popular) {
+      this.getPopularMovie(pageNumber);
+    } else {
+      this.searchMovies(textValue, pageNumber);
+    }
+  };
+
   searchMovies(text, page) {
     this.movieService
-      .getMovie(text, page)
+      .getMovies(text, page)
       .then((film) => {
         this.setState({
-          movies: [...film],
+          movies: [...film.results],
           loading: true,
         });
       })
@@ -154,41 +160,46 @@ export default class App extends Component {
     const { TabPane } = Tabs;
     const { movies, loading, error, currentPage, genres, ratedMovies, ratedId, totalPages, visiblePaginate } =
       this.state;
+
     return (
-      <section className="app">
-        <div className="app__wrapper">
-          <Tabs defaultActiveKey="1" centered onChange={() => this.getIdSessionMovies()}>
-            <TabPane tab="Search" key="1">
-              <Search search={this.setValue} />
-              <MovieList
-                movies={movies}
-                loading={loading}
-                error={error}
-                genres={genres}
-                getRatedMovie={(id, value) => this.getRatedMovie(id, value)}
-              />
-              <div className="pagination">
-                {visiblePaginate && (
-                  <Pagination
-                    paginate={this.paginate}
-                    currentPage={currentPage}
-                    loading={loading}
-                    totalPages={totalPages}
-                  />
-                )}
-              </div>
-            </TabPane>
-            <TabPane tab="Rated" key="2">
-              <RatedFilms
-                ratedMovies={ratedMovies}
-                genres={genres}
-                getRatedMovie={(id, value) => this.getRatedMovie(id, value)}
-                ratedId={ratedId}
-              />
-            </TabPane>
-          </Tabs>
-        </div>
-      </section>
+      <AppContext.Provider value={genres}>
+        <section className="app">
+          <div className="app__wrapper">
+            <Tabs defaultActiveKey="1" centered onChange={() => this.getIdSessionMovies()}>
+              <TabPane tab="Search" key="1">
+                <Search search={this.setValue} />
+
+                <MovieList
+                  movies={movies}
+                  loading={loading}
+                  error={error}
+                  genres={genres}
+                  getRatedMovie={(id, value) => this.getRatedMovie(id, value)}
+                />
+
+                <div className="pagination">
+                  {visiblePaginate && (
+                    <PaginationPage
+                      paginate={this.paginate}
+                      currentPage={currentPage}
+                      loading={loading}
+                      totalPages={totalPages}
+                    />
+                  )}
+                </div>
+              </TabPane>
+              <TabPane tab="Rated" key="2" onChange={() => this.getIdSessionMovies()}>
+                <RatedFilms
+                  ratedMovies={ratedMovies}
+                  genres={genres}
+                  getRatedMovie={(id, value) => this.getRatedMovie(id, value)}
+                  ratedId={ratedId}
+                />
+              </TabPane>
+            </Tabs>
+          </div>
+        </section>
+      </AppContext.Provider>
     );
   }
 }

@@ -3,10 +3,8 @@ import { Spin } from 'antd';
 import './spiner.css';
 import 'antd/dist/antd.css';
 
-const Spiner = () => (
+export const Spiner = () => (
   <div className="example">
     <Spin />
   </div>
 );
-
-export default Spiner;

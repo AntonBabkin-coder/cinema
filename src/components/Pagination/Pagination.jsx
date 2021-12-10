@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './pagination.css';
 import { Pagination } from 'antd';
 
-const PaginationPage = ({ paginate, totalPages, currentPage }) => (
+export const PaginationPage = ({ paginate, totalPages, currentPage }) => (
   <Pagination defaultCurrent={1} total={totalPages} onChange={paginate} current={currentPage} showSizeChanger={false} />
 );
 
@@ -18,5 +18,3 @@ PaginationPage.propTypes = {
   currentPage: PropTypes.number,
   totalPages: PropTypes.number,
 };
-
-export default PaginationPage;

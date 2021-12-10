@@ -12,9 +12,6 @@
     "jest": true
   },
   "rules": {
-    // "no-cycle": [3, {"ignoreExternal": true}],
-    // "import/no-cycle": ["error", { "maxDepth": "∞" }],
-    // "no-cycle": [2, {"ignoreExternal": true}],
     "import/prefer-default-export": "off",
     "curly": ["error"],
     "max-depth": ["warn", 4],
